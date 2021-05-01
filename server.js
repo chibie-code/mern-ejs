@@ -1,59 +1,13 @@
-/*
-let userDATA = {
-        username: rug.generate(),
-        userID: socket.id,
-    };
-
-    function returnUserData() {
-        let userDATA = {
-            username: rug.generate(),
-            userID: socket.id,
-        };
-
-        console.log("Run the test!");
-        return { test: "userDATA" };
-    }
-    console.log('socket.id: ', socket.id);
-
-    socket.on('requesting_all_messages', (cb) => {
-        console.log('A user requests all messages!');
-        cb(messages_array);
-    });
-
-    socket.on('message', (data, cb) => {
-        messages_array.push({
-            sender: userDATA.username,
-            msg: data.msg,
-            log: {
-                date: dateTime().date,
-                time: dateTime().time
-            }
-        });
-        socket.on('get_all_messages', (cb) => {
-            cb(messages_array)
-        });
-        socket.broadcast.emit('get_all_messages', messages_array);
-        console.log('User sent:', data);
-        socket.emit('get_user_data', userDATA);
-        socket.emit('user_msg', {
-            sender: userDATA.username,
-            msg: data.msg,
-            log: {
-                date: dateTime().date,
-                time: dateTime().time
-            }
-        });
-        cb(messages_array);
-    });
-
-*/
-
 const nouns = ["appearance", "appointment", "argument", "arrival", "awareness", "cabinet", "candidate", "charity", "cigarette", "committee", "conclusion", "confusion", "customer", "direction", "director", "discussion", "editor", "emotion", "employee", "employment", "energy", "family", "government", "importance", "industry", "inflation", "management", "manager", "measurement", "media", "medicine", "membership", "memory", "passenger", "percentage", "perception", "poetry", "possession", "preference", "president", "procedure", "professor", "quality", "quantity", "ratio", "relation", "requirement", "revenue", "solution", "sympathy", "actor", "area", "aspect", "audience", "birthday", "category", "chemistry", "city", "climate", "complaint", "context", "contribution", "courage", "currency", "dealer", "departure", "depression", "description", "device", "enthusiasm", "equipment", "establishment", "family", "feedback", "fishing", "history", "improvement", "inflation", "injury", "maintenance", "marriage", "office", "penalty", "percentage", "permission", "possession", "reading", "reality", "recommendation", "relation", "republic", "salad", "secretary", "selection", "software", "system", "television", "theory", "transportation", "writing"];
 const adj = ["abrupt", "accidental", "agreeable", "animated", "bashful", "calm", "careless", "chunky", "coordinated", "difficult", "disturbed", "drab", "drunk", "efficient", "equable", "far", "first", "grouchy", "incandescent", "joyous", "kindly", "lethal", "long", "loud", "loving", "married", "materialistic", "obeisant", "optimal", "perpetual", "premium", "public", "regular", "righteous", "sexy", "shy", "skillful", "slippery", "spiky", "subdued", "successfully", "tender", "unable", "unsightly", "various", "victorious", "wide-eyed", "witty", "wooden", "yielding", "yummy", "abandoned", "abject", "absent", "attractive", "auspicious", "bewildered", "blushing", "boorish", "bored", "boundless", "caring", "chief", "cooing", "dull", "earsplitting", "efficacious", "eight", "embarrassed", "entertaining", "faded", "few", "filthy", "five", "giant", "graceful", "guttural", "highfalutin", "knowledgeable", "light", "limping", "loutish", "magnificent", "next", "obvious", "ordinary", "overt", "parallel", "pastoral", "scrawny", "screeching", "silky", "slippery", "slow", "smoggy", "strict", "swift", "unaccountable", "vague", "wet", "wooden"];
 
 var express = require('express');
 
 var app = express();
+
+const server = require('http').createServer(app);
+
+const io = require('socket.io')(server);
 
 var rug = require('random-username-generator');
 
@@ -63,13 +17,11 @@ rug.setNames([...nouns]);
 
 rug.setAdjectives([...adj]);
 
-var messages_array = [];
+var messagesArray = [];
 
 // const wss = new Server({ server });
 
-// const io = require("socket.io")(server);
-
-function dateTime() { // date-time timestamp function. returns final date-time object
+function getCurrentdateTime() { // date-time timestamp function. returns final date-time object
 
     const timestampNow = Date.now() // get current timestamp in milliseconds
     const date = new Date(timestampNow); // convert timestamp to date object
@@ -86,19 +38,24 @@ function dateTime() { // date-time timestamp function. returns final date-time o
     return finalDateTime; // obj => { date: '', time: '' }
 }
 
-// io.on('connection', (socket) => {
-//     console.log('socket id:', socket.id);
-// });
-
-// set the port of our application
-// process.env.PORT lets the port be set by Heroku
-var port = process.env.PORT || 8080;
+// set the '/views' root to the views directory
+app.set('views', __dirname + '/views');
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
 // make express look in the public directory for assets (css/js/img)
 app.use(express.static(__dirname + '/public'));
+
+// set the port of our application
+// process.env.PORT lets the port be set by Heroku
+var port = process.env.PORT || 3000;
+
+server.listen(port, function() {
+    console.log('Our app is running on http://localhost:' + port);
+});
+
+// Routes
 
 // set the home page route
 app.get('/', function(req, res) {
@@ -132,6 +89,48 @@ app.use(function(req, res) {
     res.status(404).render('404');
 });
 
-const server = app.listen(port, function() {
-    console.log('Our app is running on http://localhost:' + port);
+function setNewUserLoginData(socketId) {
+    return userData = { // user date object to be sent back to the user [FUNCTION]
+        username: rug.generate(),
+        userID: socketId,
+    };
+}
+
+function addNewMessage(userData, messageObjectData) {
+    const newMessageObject = { // [FUNCTION]
+        sender: userData.username,
+        msg: messageObjectData.msg,
+        log: {
+            date: getCurrentdateTime().date,
+            time: getCurrentdateTime().time
+        }
+    }
+    messagesArray.push(newMessageObject); // push the message object to the messages array [FUNCTION]
+}
+
+io.sockets.on('connection', (socket) => {
+
+    io.emit('broadcast all messages to clients', messagesArray);
+
+    const newSocketUserData = setNewUserLoginData(socket.id);
+
+    console.log('socket.id: ', socket.id);
+
+    socket.on('get newly joined user data', (sendUserDataAndMessages) => {
+
+        io.emit('broadcast all messages to clients', messagesArray);
+
+        sendUserDataAndMessages(newSocketUserData, messagesArray);
+
+    });
+
+    socket.on('send new message', (sentMessageObject) => {
+
+        addNewMessage(newSocketUserData, sentMessageObject);
+
+        console.log('User sent:', sentMessageObject);
+
+        io.emit('broadcast all messages to clients', messagesArray);
+
+    });
 });
