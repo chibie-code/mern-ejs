@@ -10,8 +10,6 @@ var state = {
     test: null
 };
 
-onload = (e) => {}
-
 function joinAnim() {
     $("#chat-area").show("slow");
     $("#join-button").hide("slow");
@@ -30,7 +28,7 @@ function loadMessages() {
         <span class='d-flex flex-column msg-inner'>
           <div class='d-flex ${((msgObj.sender === state.username)?'text-right justify-content-end':'text-left justify-content-start')}'>
             <span class='message-sender ${((msgObj.sender === state.username)?'text-right':'text-left')} font-weight-bold'>
-              <img src='/images/h-s-removebg-preview.png' style='width: 50px; height: 50px'>😎${msgObj.sender}
+              ${msgObj.sender}
             </span>
             <span class='text-muted'>
               @ ${msgObj.log.date}, ${msgObj.log.time}:
