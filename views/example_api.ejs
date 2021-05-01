@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include partials/head %>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include partials/header %>
+    </header>
+
+    <main>
+        <div class="jumbotron jumbotron-fluid">
+            <div class='container'>
+                <h1 class='text-center'>Example API endpoint fetch</h1>
+                <div class="container">This button will fetch an example data from the api endpoint at <a href='https://jsonplaceholder.typicode.com/users'>https://jsonplaceholder.typicode.com/users</a>, using the GET method</div>
+                <div>
+                    <div class='container d-flex flex-column justify-content-center align-items-center'>
+                        <button type="button" id='get-data' class="text-center list-group-item list-group-item-action api-fetch-btn w-25 active" onclick='getUsers()'>
+              GET data
+            </button>
+                        <button type="button" id='show-data' class="text-center list-group-item list-group-item-action api-fetch-btn w-25 active" onclick='addListItem()'>
+              Show next data in list
+            </button>
+                        <div class="container" style='max-height: 35vh; overflow-y: auto;'>
+                            <ul id="list-group" class='fade-user-item' style='display: flex; flex-direction: column-reverse;'></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="/js/script.js"></script>
+    </main>
+    <footer>
+        <%- include partials/footer %>
+    </footer>
+
+</body>
+
+</html>

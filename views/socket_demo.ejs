@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include partials/head %>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include partials/header %>
+    </header>
+
+    <main class=''>
+        <div class="jumbotron jumbotron-fluid">
+            <div class='container' style='display: flex; flex-direction: column; justify-content: center; align-items: center;'>
+                <span style='display: flex; justify-content: space-evenly; margin: 5px 0;'>
+        <h1 class='socket-h1 swing'>Socket.io chat demo <span id='user-name-display'></span></h1>
+                </span>
+                <span class='container-fluid d-flex justify-content-center'>
+        <button type='button' id='join-button' class='m-1 btn btn-success' onclick='joinChatroom()'>Join the chat</button>
+      </span>
+
+                <div class='chat-area' id='chat-area'>
+                    <div class='scroll-container' id='scroll-container'>
+                        <div class='scroll-area' id='scroll-area'></div>
+                    </div>
+
+                    <div class='shadow-sm container-fluid w-100'>
+                        <div class='input-group' style='width: 100%; height: 100%;'>
+                            <input type='text' class='form-control' placeholder='Send message' aria-label='Input your message to be sent to the chatroom' aria-describedby='send-message-btn' id='message-input-box'>
+                            <div class='input-group-append'>
+                                <button class='btn btn-outline-info' type='button' onclick='sendMessage()'>Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <script type="text/javascript" src="/js/socket-client-script.js"></script>
+    </main>
+
+    <footer>
+        <%- include partials/footer %>
+    </footer>
+
+</body>
+
+</html>
