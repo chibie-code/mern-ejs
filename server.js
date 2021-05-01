@@ -36,10 +36,6 @@ const adj = ["abrupt", "accidental", "agreeable", "animated", "bashful", "calm",
 var express = require('express');
 var app = express();
 
-const { Server } = require('ws');
-
-const cors = require('cors');
-
 var rug = require('random-username-generator');
 
 rug.setSeperator('.');
@@ -50,6 +46,14 @@ rug.setAdjectives([...adj]);
 const app = express();
 
 var messages_array = [];
+
+const server = app.listen(port, function() {
+    console.log('Our app is running on http://localhost:' + port);
+});
+
+// const wss = new Server({ server });
+
+const io = require("socket.io")(server);
 
 function dateTime() { // date-time timestamp function. returns final date-time object
 
@@ -158,17 +162,4 @@ app.get('/socket_demo', function(req, res) {
 
 app.use(function(req, res) {
     res.status(404).render('404');
-});
-
-const server = app.listen(port, function() {
-    console.log('Our app is running on http://localhost:' + port);
-});
-
-const wss = new Server({ server });
-
-const io = require("socket.io")(server, {
-    cors: {
-        origin: "https://mern-minus.herokuapp.com/",
-        methods: ["GET", "POST"]
-    }
 });
