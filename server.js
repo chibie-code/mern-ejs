@@ -65,10 +65,6 @@ const app = express();
 
 var messages_array = [];
 
-const server = app.listen(port, function() {
-    console.log('Our app is running on http://localhost:' + port);
-});
-
 // const wss = new Server({ server });
 
 // const io = require("socket.io")(server);
@@ -134,4 +130,8 @@ app.get('/socket_demo', function(req, res) {
 
 app.use(function(req, res) {
     res.status(404).render('404');
+});
+
+const server = app.listen(port, function() {
+    console.log('Our app is running on http://localhost:' + port);
 });
