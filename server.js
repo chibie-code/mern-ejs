@@ -52,6 +52,7 @@ const nouns = ["appearance", "appointment", "argument", "arrival", "awareness", 
 const adj = ["abrupt", "accidental", "agreeable", "animated", "bashful", "calm", "careless", "chunky", "coordinated", "difficult", "disturbed", "drab", "drunk", "efficient", "equable", "far", "first", "grouchy", "incandescent", "joyous", "kindly", "lethal", "long", "loud", "loving", "married", "materialistic", "obeisant", "optimal", "perpetual", "premium", "public", "regular", "righteous", "sexy", "shy", "skillful", "slippery", "spiky", "subdued", "successfully", "tender", "unable", "unsightly", "various", "victorious", "wide-eyed", "witty", "wooden", "yielding", "yummy", "abandoned", "abject", "absent", "attractive", "auspicious", "bewildered", "blushing", "boorish", "bored", "boundless", "caring", "chief", "cooing", "dull", "earsplitting", "efficacious", "eight", "embarrassed", "entertaining", "faded", "few", "filthy", "five", "giant", "graceful", "guttural", "highfalutin", "knowledgeable", "light", "limping", "loutish", "magnificent", "next", "obvious", "ordinary", "overt", "parallel", "pastoral", "scrawny", "screeching", "silky", "slippery", "slow", "smoggy", "strict", "swift", "unaccountable", "vague", "wet", "wooden"];
 
 var express = require('express');
+
 var app = express();
 
 var rug = require('random-username-generator');
@@ -59,9 +60,8 @@ var rug = require('random-username-generator');
 rug.setSeperator('.');
 
 rug.setNames([...nouns]);
-rug.setAdjectives([...adj]);
 
-const app = express();
+rug.setAdjectives([...adj]);
 
 var messages_array = [];
 
