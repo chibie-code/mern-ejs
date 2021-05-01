@@ -150,6 +150,24 @@ app.get('/about', function(req, res) {
     res.render('about');
 });
 
+// set the about page route
+app.get('/example_api', function(req, res) {
+
+    // ejs render automatically looks in the views folder
+    res.render('example_api');
+});
+
+// set the about page route
+app.get('/socket_demo', function(req, res) {
+
+    // ejs render automatically looks in the views folder
+    res.render('socket_demo');
+});
+
+app.use(function(req, res) {
+    res.status(404).render('404');
+});
+
 app.listen(port, function() {
     console.log('Our app is running on http://localhost:' + port);
 });
