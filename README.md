@@ -1,2 +1,4 @@
-# mern-ejs
-MERN except with EJS instead of React
+heroku-node
+===========
+
+Code for the tutorial by @sevilayha: Deploying Node Apps to Heroku
