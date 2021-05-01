@@ -36,16 +36,11 @@ const adj = ["abrupt", "accidental", "agreeable", "animated", "bashful", "calm",
 var express = require('express');
 var app = express();
 
+const { Server } = require('ws');
+
 const cors = require('cors');
 
 var rug = require('random-username-generator');
-
-const io = require("socket.io")(server, {
-    cors: {
-        origin: "https://mern-minus.herokuapp.com/",
-        methods: ["GET", "POST"]
-    }
-});
 
 rug.setSeperator('.');
 
@@ -165,6 +160,15 @@ app.use(function(req, res) {
     res.status(404).render('404');
 });
 
-app.listen(port, function() {
+const server = app.listen(port, function() {
     console.log('Our app is running on http://localhost:' + port);
+});
+
+const wss = new Server({ server });
+
+const io = require("socket.io")(server, {
+    cors: {
+        origin: "https://mern-minus.herokuapp.com/",
+        methods: ["GET", "POST"]
+    }
 });
