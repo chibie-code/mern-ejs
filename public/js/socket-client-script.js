@@ -102,7 +102,7 @@ function sendMessage() {
         socket.on('broadcast all messages to clients', getMessages);
         console.log('Sent message!');
         state.message = "";
-        document.getElementById('message-input-box').target.value = "";
+        document.getElementById('message-input-box').value = "";
         return;
     }
 }
@@ -124,6 +124,7 @@ inpt.addEventListener('keydown', (e) => {
         socket.emit('typing', { isTyping: false });
         document.getElementById("isTyping").innerHTML = "";
         console.log("No one's typing");
+        state.message = "";
         e.target.value = "";
         return;
     }
