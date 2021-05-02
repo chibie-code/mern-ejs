@@ -7,8 +7,36 @@ var state = {
     userID: '',
     message: '',
     messages: Array(),
-    test: null
+    test: null,
+    increment: 0
 };
+
+var i = 0;
+
+$(document).ready(function() {
+    socket.on("someone is typing", (isTypingObj) => {
+        if (isTypingObj.isTyping) {
+            document.getElementById("isTyping").innerHTML = "someone is typing";
+            // console.log("Typing...");
+        } else {
+            document.getElementById("isTyping").innerHTML = "";
+            // console.log("No one's typing");
+        }
+    })
+    $("input").keyup(function(e) {
+        if (e.target.value !== "") {
+            setMessage(e);
+            socket.emit('typing', { isTyping: true });
+        } else {
+            console.log("[empty]e.value:", e.target.value);
+            socket.emit('typing', { isTyping: false });
+            // $("input").css("background-color", "pink");
+        }
+    });
+    socket.on('someone is typing', (typingObject) => {
+        console.log('Typing:', typingObject.isTyping);
+    });
+});
 
 function joinAnim() {
     $("#chat-area").show("slow");
@@ -34,11 +62,12 @@ function loadMessages() {
               @ ${msgObj.log.date}, ${msgObj.log.time}:
             </span>
           </div>
-          <span class='d-block ${((msgObj.sender === state.username)?'text-right':'text-left')}'>${msgObj.msg}</span>
+          <span class='d-block ${((msgObj.sender === state.username)?'text-right':'text-left')}' style="overflow-wrap: break-word;">${msgObj.msg}</span>
         </span>
-      </div>`
+        </div>
+      `
         );
-    })
+    });
     var objDiv = document.getElementById("scroll-container");
     objDiv.scrollTop = objDiv.scrollHeight - objDiv.clientHeight;
 }
@@ -67,10 +96,13 @@ function sendMessage() {
         console.log('Can\'t send message as you haven\'t joined the chatroom');
         return;
     }
+
     if (state.message !== '') {
         socket.emit('send new message', { msg: state.message });
         socket.on('broadcast all messages to clients', getMessages);
         console.log('Sent message!');
+        state.message = "";
+        document.getElementById('message-input-box').target.value = "";
         return;
     }
 }
@@ -86,9 +118,13 @@ function joinChatroom() {
 
 inpt.addEventListener('change', setMessage);
 inpt.addEventListener('keydown', (e) => {
+
     if (e.key === 'Enter') {
-        setMessage(e);
         sendMessage();
+        socket.emit('typing', { isTyping: false });
+        document.getElementById("isTyping").innerHTML = "";
+        console.log("No one's typing");
+        e.target.value = "";
         return;
     }
 });

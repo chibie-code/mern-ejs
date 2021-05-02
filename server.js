@@ -53,7 +53,7 @@ app.use(express.static(__dirname + '/public'));
 var port = process.env.PORT || 8080;
 
 server.listen(port, function() {
-    console.log('Our app is running on http://localhost:' + port);
+    console.log('Server running on PORT:' + port);
 });
 
 // Routes
@@ -110,6 +110,16 @@ function addNewMessage(userData, messageObjectData) {
 }
 
 io.sockets.on('connection', (socket) => {
+
+    socket.on('typing', (payload) => {
+        if (payload.isTyping) {
+            // console.log('Someone is typing...');
+            socket.broadcast.emit('someone is typing', { isTyping: true });
+        } else {
+            // console.log('No one is typing.');
+            socket.broadcast.emit('someone is typing', { isTyping: false });
+        }
+    })
 
     io.emit('broadcast all messages to clients', messagesArray);
 
