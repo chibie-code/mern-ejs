@@ -50,22 +50,17 @@ const inpt = document.getElementById('message-input-box'); // the message-input-
 function loadMessages() {
 
     document.getElementById('scroll-area').innerHTML = state.messages.map(msgObj => {
+
+
         return (
-            `
-      <div class='message-container d-flex ${((msgObj.sender === state.username)?'justify-content-end':'justify-content-start')}' style='margin: 0;'>
-        <span class='d-flex flex-column msg-inner'>
-          <div class='d-flex ${((msgObj.sender === state.username)?'text-right justify-content-end':'text-left justify-content-start')}'>
-            <span class='message-sender ${((msgObj.sender === state.username)?'text-right':'text-left')} font-weight-bold'>
-              ${msgObj.sender}
-            </span>
-            <span class='text-muted'>
-              @ ${msgObj.log.date}, ${msgObj.log.time}:
-            </span>
-          </div>
-          <span class='d-block ${((msgObj.sender === state.username)?'text-right':'text-left')}' style="overflow-wrap: break-word;">${msgObj.msg}</span>
-        </span>
-        </div>
-      `
+            `<div class="message-container d-flex ${((msgObj.sender === state.username)?'justify-content-end':'justify-content-start')}" style="margin: 0;">
+                <span class='d-flex flex-column msg-inner'>
+                    <div class="d-flex ${((msgObj.sender === state.username)?'text-right justify-content-end':'text-left justify-content-start')}">
+                        <span class="message-sender ${((msgObj.sender === state.username)?'text-right':'text-left')} font-weight-bold"> ${msgObj.sender} </span><span class="text-muted"> @ ${msgObj.log.date} | ${msgObj.log.time}: </span>
+                    </div>
+                    <span class="d-block ${((msgObj.sender === state.username)?'text-right':'text-left')}" style="overflow-wrap: break-word;">${msgObj.msg}</span>
+                </span>
+            </div>`
         );
     });
     var objDiv = document.getElementById("scroll-container");
